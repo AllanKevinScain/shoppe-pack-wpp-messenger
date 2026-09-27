@@ -1,0 +1,10 @@
+{
+  "name": "Shopee - Disparar oferta agora",
+  "nodes": [
+    {"parameters": {"httpMethod": "POST", "path": "shopee-send-now", "responseMode": "lastNode"}, "id": "webhook", "name": "Acionamento manual", "type": "n8n-nodes-base.webhook", "typeVersion": 2, "position": [300, 300]},
+    {"parameters": {"url": "http://host.docker.internal:8000/jobs/dispatch", "sendHeaders": true, "headerParameters": {"parameters": [{"name": "Authorization", "value": "Bearer SUBSTITUA_PELO_TOKEN_DO_ADMIN"}]}}, "id": "request", "name": "Enviar pela API", "type": "n8n-nodes-base.httpRequest", "typeVersion": 4.2, "position": [550, 300]}
+  ],
+  "connections": {"Acionamento manual": {"main": [[{"node": "Enviar pela API", "type": "main", "index": 0}]]}},
+  "active": false,
+  "settings": {"executionOrder": "v1"}
+}

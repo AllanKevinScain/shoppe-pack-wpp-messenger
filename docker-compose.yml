@@ -1,0 +1,47 @@
+services:
+  n8n:
+    image: n8nio/n8n:1.112.4
+    container_name: shopee-n8n
+    ports:
+      - "5678:5678"
+    environment:
+      N8N_HOST: ${N8N_HOST:-localhost}
+      N8N_PORT: 5678
+      N8N_PROTOCOL: http
+      WEBHOOK_URL: ${N8N_WEBHOOK_URL:-http://localhost:5678/}
+      GENERIC_TIMEZONE: America/Sao_Paulo
+    volumes:
+      - n8n_data:/home/node/.n8n
+    restart: unless-stopped
+
+  ngrok:
+    image: ngrok/ngrok:3-alpine
+    container_name: shopee-ngrok
+    command: http n8n:5678
+    environment:
+      NGROK_AUTHTOKEN: ${NGROK_AUTHTOKEN:?Defina NGROK_AUTHTOKEN no arquivo .env}
+    ports:
+      - "4040:4040"
+    depends_on:
+      - n8n
+    restart: unless-stopped
+
+  evolution-api:
+    image: atendai/evolution-api:v2.2.3
+    container_name: shopee-evolution-api
+    ports:
+      - "8080:8080"
+    environment:
+      SERVER_URL: http://localhost:8080
+      SERVER_PORT: 8080
+      AUTHENTICATION_TYPE: apikey
+      AUTHENTICATION_API_KEY: ${EVOLUTION_API_KEY}
+      DATABASE_ENABLED: false
+      CACHE_REDIS_ENABLED: false
+    volumes:
+      - evolution_instances:/evolution/instances
+    restart: unless-stopped
+
+volumes:
+  n8n_data:
+  evolution_instances:
