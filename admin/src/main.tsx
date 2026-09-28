@@ -5,6 +5,7 @@ import { BrowserRouter, Navigate, Route, Routes } from "react-router";
 import { Toaster } from "react-hot-toast";
 import { Sidebar } from "./components/Sidebar";
 import { Dashboard } from "./pages/Dashboard";
+import { Dispatches } from "./pages/Dispatches";
 import { Guide } from "./pages/Guide";
 import { Login } from "./pages/Login";
 import { Security } from "./pages/Security";
@@ -42,6 +43,7 @@ export function App() {
       <Routes>
         <Route path="/" element={<Dashboard token={token} />} />
         <Route path="/seguranca" element={<Security token={token} />} />
+        <Route path="/envios" element={<Dispatches token={token} />} />
         <Route path="/guia" element={<Guide token={token} />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>

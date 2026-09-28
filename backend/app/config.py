@@ -20,6 +20,7 @@ DEFAULT_SETTINGS: dict[str, Any] = {
     "strategy": "best_potential",
     "authorized_numbers": [],
     "last_dispatch_at": None,
+    "schedule_started_at": None,
 }
 
 

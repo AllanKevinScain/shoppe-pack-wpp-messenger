@@ -1,4 +1,5 @@
 backend/data/*.json
+backend/data/*.sqlite3
 backend/__pycache__/
 backend/**/*.pyc
 backend/.venv/

@@ -29,7 +29,7 @@ function SettingsEditor({ token, initialSettings }: { token: string; initialSett
     try {
       const result = await saveSettings.mutateAsync(settings);
       setSettings(result);
-      toast.success("Configurações salvas. O novo intervalo já está ativo.");
+      toast.success("Configurações salvas. O n8n aplicará o intervalo no próximo ciclo.");
     } catch (err) {
       toast.error(err instanceof Error ? err.message : "Não foi possível salvar.");
     }

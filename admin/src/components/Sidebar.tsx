@@ -1,8 +1,9 @@
-import { LogOut, Settings2, ShieldCheck, Sparkles } from "lucide-react";
+import { Activity, LogOut, Settings2, ShieldCheck, Sparkles } from "lucide-react";
 import { NavLink } from "react-router";
 
 const links = [
   { to: "/", label: "Configurações", icon: Settings2 },
+  { to: "/envios", label: "Envios", icon: Activity },
   { to: "/seguranca", label: "Segurança", icon: ShieldCheck },
   { to: "/guia", label: "Guia", icon: Sparkles },
 ] as const;
@@ -60,7 +61,7 @@ export function Sidebar({ onLogout }: { onLogout: () => void }) {
             <LogOut className="h-4 w-4" /> Sair
           </button>
         </div>
-        <nav className="mt-4 grid grid-cols-3 gap-1" aria-label="Navegação principal">
+        <nav className="mt-4 grid grid-cols-4 gap-1" aria-label="Navegação principal">
           {navigation(true)}
         </nav>
       </header>

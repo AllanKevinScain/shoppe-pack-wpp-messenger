@@ -47,7 +47,7 @@ function prepare() {
     console.log("[preparo] Criando ambiente Python em backend/.venv...");
     run(command, [...args, "-m", "venv", ".venv"], backend);
   }
-  const probe = spawnSync(venvPython, ["-c", "import fastapi, uvicorn, httpx, dotenv, apscheduler, jwt"], { cwd: backend, stdio: "ignore" });
+  const probe = spawnSync(venvPython, ["-c", "import fastapi, uvicorn, httpx, dotenv, jwt"], { cwd: backend, stdio: "ignore" });
   if (probe.status !== 0) {
     console.log("[preparo] Instalando dependências Python...");
     run(venvPython, ["-m", "pip", "install", "-r", "requirements.txt"], backend);

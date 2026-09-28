@@ -29,11 +29,33 @@ export function Guide({ token }: { token: string }) {
               Preencha as credenciais da Shopee e, opcionalmente, do Gemini em{" "}
               <code className="font-mono text-sky-300">.env</code>.
             </li>
-            <li>Inicie o backend e o painel; depois use “Enviar agora” no dashboard para a demonstração.</li>
+            <li>Inicie o backend e o painel. O botão “Enviar agora” serve apenas para disparos manuais.</li>
           </ol>
         </div>
         <WhatsAppQr token={token} />
       </div>
+      <article className="mt-6 rounded-2xl border border-slate-200 bg-white p-7 shadow-sm">
+        <h2 className="text-lg font-bold">Ative o envio automático no n8n</h2>
+        <ol className="mt-4 list-decimal space-y-2 pl-5 text-sm leading-7 text-slate-600">
+          <li>
+            Abra{" "}
+            <a className="text-sky-700 hover:underline" href="http://localhost:5678" target="_blank" rel="noreferrer">
+              o n8n
+            </a>{" "}
+            e importe <code className="font-mono">n8n/workflows/send-offer-automatically.json</code>.
+          </li>
+          <li>
+            No nó “Enviar se estiver na hora”, configure uma credencial Header Auth: nome{" "}
+            <code className="font-mono">X-Dispatch-Token</code>, valor{" "}
+            <code className="font-mono">N8N_DISPATCH_TOKEN</code> do arquivo <code className="font-mono">.env</code>.
+          </li>
+          <li>Salve e publique/ative o workflow uma vez. Mantenha n8n e backend ligados.</li>
+          <li>
+            Defina o intervalo no dashboard. O n8n verifica a cada minuto e a API envia somente quando o intervalo
+            termina.
+          </li>
+        </ol>
+      </article>
     </section>
   );
 }

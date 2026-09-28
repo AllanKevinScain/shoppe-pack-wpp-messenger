@@ -1,6 +1,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { request } from "../api";
 import type { Settings } from "../settings";
+import { dispatchMonitorKey } from "./useDispatchMonitor";
 import { settingsKey } from "./useSettings";
 
 export function useSaveSettings(token: string) {
@@ -8,6 +9,9 @@ export function useSaveSettings(token: string) {
   return useMutation({
     mutationFn: (settings: Settings) =>
       request<Settings>("/settings", token, { method: "PUT", body: JSON.stringify(settings) }),
-    onSuccess: (settings) => queryClient.setQueryData(settingsKey(token), settings),
+    onSuccess: (settings) => {
+      queryClient.setQueryData(settingsKey(token), settings);
+      queryClient.invalidateQueries({ queryKey: dispatchMonitorKey(token) });
+    },
   });
 }
