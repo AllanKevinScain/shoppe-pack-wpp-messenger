@@ -33,7 +33,11 @@ async def connection_qr() -> dict[str, Any]:
 async def find_group_jid(group_name: str) -> str:
     instance = get_env("EVOLUTION_INSTANCE", "shopee-messenger")
     async with httpx.AsyncClient(timeout=20) as client:
-        response = await client.get(f"{_base()}/group/fetchAllGroups/{instance}", headers=_headers())
+        response = await client.get(
+            f"{_base()}/group/fetchAllGroups/{instance}",
+            headers=_headers(),
+            params={"getParticipants": "false"},
+        )
         response.raise_for_status()
     groups = response.json()
     matches = [group for group in groups if group.get("subject", "").casefold() == group_name.casefold()]

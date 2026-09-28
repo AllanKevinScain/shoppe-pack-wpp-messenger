@@ -1,6 +1,6 @@
 services:
   n8n:
-    image: n8nio/n8n:1.112.4
+    image: ${N8N_IMAGE:?Defina N8N_IMAGE no arquivo .env}
     container_name: shopee-n8n
     ports:
       - "5678:5678"
@@ -15,7 +15,7 @@ services:
     restart: unless-stopped
 
   ngrok:
-    image: ngrok/ngrok:3-alpine
+    image: ${NGROK_IMAGE:?Defina NGROK_IMAGE no arquivo .env}
     container_name: shopee-ngrok
     command: http n8n:5678
     environment:
@@ -26,8 +26,37 @@ services:
       - n8n
     restart: unless-stopped
 
+  postgres:
+    image: ${POSTGRES_IMAGE:?Defina POSTGRES_IMAGE no arquivo .env}
+    container_name: shopee-evolution-postgres
+    environment:
+      POSTGRES_DB: evolution
+      POSTGRES_USER: evolution
+      POSTGRES_PASSWORD: ${EVOLUTION_DB_PASSWORD:-local-dev-only-password}
+    volumes:
+      - evolution_postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U evolution -d evolution"]
+      interval: 5s
+      timeout: 3s
+      retries: 12
+    restart: unless-stopped
+
+  redis:
+    image: ${REDIS_IMAGE:?Defina REDIS_IMAGE no arquivo .env}
+    container_name: shopee-evolution-redis
+    command: [redis-server, --appendonly, "yes"]
+    volumes:
+      - evolution_redis_data:/data
+    healthcheck:
+      test: [CMD, redis-cli, ping]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+    restart: unless-stopped
+
   evolution-api:
-    image: atendai/evolution-api:v2.2.3
+    image: ${EVOLUTION_IMAGE:?Defina EVOLUTION_IMAGE no arquivo .env}
     container_name: shopee-evolution-api
     ports:
       - "8080:8080"
@@ -36,12 +65,27 @@ services:
       SERVER_PORT: 8080
       AUTHENTICATION_TYPE: apikey
       AUTHENTICATION_API_KEY: ${EVOLUTION_API_KEY}
-      DATABASE_ENABLED: false
-      CACHE_REDIS_ENABLED: false
+      DATABASE_ENABLED: "true"
+      DATABASE_PROVIDER: postgresql
+      DATABASE_CONNECTION_URI: postgresql://evolution:${EVOLUTION_DB_PASSWORD:-local-dev-only-password}@postgres:5432/evolution?schema=public
+      DATABASE_CONNECTION_CLIENT_NAME: shopee_pack
+      DATABASE_SAVE_DATA_INSTANCE: "true"
+      CACHE_REDIS_ENABLED: "true"
+      CACHE_REDIS_URI: redis://redis:6379/0
+      CACHE_REDIS_PREFIX_KEY: shopee_pack
+      CACHE_REDIS_SAVE_INSTANCES: "false"
+      CACHE_LOCAL_ENABLED: "false"
     volumes:
       - evolution_instances:/evolution/instances
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
     restart: unless-stopped
 
 volumes:
   n8n_data:
   evolution_instances:
+  evolution_postgres_data:
+  evolution_redis_data:

@@ -15,7 +15,7 @@ DATA_FILE.parent.mkdir(parents=True, exist_ok=True)
 _lock = RLock()
 
 DEFAULT_SETTINGS: dict[str, Any] = {
-    "group_name": "pack_shope_ia",
+    "group_name": "pack_shopee_ia",
     "interval_minutes": 180,
     "strategy": "best_potential",
     "authorized_numbers": [],

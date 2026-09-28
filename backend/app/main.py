@@ -64,7 +64,9 @@ async def lifespan(_: FastAPI):
     scheduler.shutdown(wait=False)
 
 app = FastAPI(title="Shopee Pack WPP Messenger", lifespan=lifespan)
-app.add_middleware(CORSMiddleware, allow_origins=[os.getenv("ADMIN_ORIGIN", "http://localhost:5173")], allow_credentials=True, allow_methods=["*"], allow_headers=["*"])
+admin_origins = ["http://localhost:5173", "http://127.0.0.1:5173"]
+admin_origins.extend(origin.strip() for origin in os.getenv("ADMIN_ORIGIN", "").split(",") if origin.strip())
+app.add_middleware(CORSMiddleware, allow_origins=admin_origins, allow_credentials=True, allow_methods=["*"], allow_headers=["*"])
 
 @app.get("/health")
 async def health(): return {"status": "ok"}

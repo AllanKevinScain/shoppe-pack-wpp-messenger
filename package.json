@@ -3,6 +3,9 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "node dev.mjs"
+    "dev": "node dev.mjs",
+    "up": "docker compose up -d",
+    "ps": "docker compose ps",
+    "down": "docker compose down -v"
   }
 }
